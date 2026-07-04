@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Digital Clock, Date & Countdown</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1a1a2e);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #fff;
+            padding: 20px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            text-align: center;
+        }
+
+        h2 {
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            background: linear-gradient(90deg, #ff0076, #590fb7, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .time-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .time-box {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 20px 15px;
+            min-width: 110px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .time-box:hover {
+            transform: translateY(-5px);
+        }
+
+        .time-box span {
+            font-size: clamp(2.5rem, 10vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .time-box small {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 10px;
+            letter-spacing: 2px;
+        }
+
+        .clock-hours span { color: #00f2fe; text-shadow: 0 0 15px #00f2fe; }
+        .clock-minutes span { color: #ff08cb; text-shadow: 0 0 15px #ff08cb; }
+        .clock-seconds span { color: #fefc00; text-shadow: 0 0 15px #fefc00; }
+
+        .cd-days span { color: #43e97b; text-shadow: 0 0 15px #43e97b; }
+        .cd-hours span { color: #38f9d7; text-shadow: 0 0 15px #38f9d7; }
+        .cd-minutes span { color: #fa709a; text-shadow: 0 0 15px #fa709a; }
+        .cd-seconds span { color: #fee140; text-shadow: 0 0 15px #fee140; }
+
+        .separator {
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: bold;
+            color: #fff;
+            animation: blink 1s step-end infinite;
+            align-self: flex-start;
+            margin-top: 20px;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .ampm {
+            font-size: 1.5rem;
+            margin-top: 20px;
+            color: #00f2fe;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px #00f2fe;
+        }
+
+        /* Current Date Display */
+        .current-date {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .date-display {
+            font-size: clamp(1.2rem, 5vw, 2rem);
+            font-weight: 700;
+            background: linear-gradient(90deg, #f093fb, #f5576c, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(240, 147, 251, 0.5);
+        }
+
+        .day-name {
+            display: block;
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            color: #4facfe;
+            margin-top: 10px;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px #4facfe;
+        }
+
+        .celebration-msg {
+            font-size: 2rem;
+            color: #fee140;
+            text-shadow: 0 0 20px #fee140;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .time-box {
+                min-width: 75px;
+                padding: 15px 10px;
+            }
+            .separator {
+                margin-top: 15px;
+            }
+            .card {
+                padding: 25px 10px;
+            }
+        }
+        .main-title{
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    margin-bottom: 15px;
+    background: linear-gradient(90deg,#00f2fe,#ff08cb,#fee140);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(255,255,255,.3);
+    }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Digital Clock Section -->
+        <div class="card">
+
+    <h1 class="main-title">DIGITAL CLOCK</h1>
+
+    <h2>Current Time</h2>
+
+    <div class="time-wrapper">
+                <div class="time-box clock-hours"><span id="clock-h">00</span><small>HOURS</small></div>
+                <span class="separator">:</span>
+                <div class="time-box clock-minutes"><span id="clock-m">00</span><small>MINUTES</small></div>
+                <span class="separator">:</span>
+                <div class="time-box clock-seconds"><span id="clock-s">00</span><small>SECONDS</small></div>
+            </div>
+            <div id="ampm" class="ampm">AM</div>
+            
+            <!-- Current Date Display -->
+            <div class="current-date">
+                <div id="date-display" class="date-display">Loading...</div>
+                <span id="day-name" class="day-name"></span>
+            </div>
+        </div>
+
+        <!-- Countdown Section -->
+        <div class="card">
+            <h2>Countdown to New Year</h2>
+            <div class="time-wrapper" id="countdown-wrapper">
+                <div class="time-box cd-days"><span id="cd-d">00</span><small>DAYS</small></div>
+                <div class="time-box cd-hours"><span id="cd-h">00</span><small>HOURS</small></div>
+                <div class="time-box cd-minutes"><span id="cd-m">00</span><small>MINUTES</small></div>
+                <div class="time-box cd-seconds"><span id="cd-s">00</span><small>SECONDS</small></div>
+            </div>
+            <div id="celebration" class="celebration-msg">🎉 Happy New Year! 🎉</div>
+        </div>
+    </div>
+
+    <script>
+        function padZero(num) {
+            return num < 10 ? "0" + num : num;
+        }
+
+        function updateTimers() {
+            const now = new Date();
+
+            // 1. UPDATE DIGITAL CLOCK
+            let currentHours = now.getHours();
+            const currentMinutes = now.getMinutes();
+            const currentSeconds = now.getSeconds();
+            
+            const ampm = currentHours >= 12 ? 'PM' : 'AM';
+            currentHours = currentHours % 12;
+            currentHours = currentHours ? currentHours : 12;
+
+            document.getElementById("clock-h").textContent = padZero(currentHours);
+            document.getElementById("clock-m").textContent = padZero(currentMinutes);
+            document.getElementById("clock-s").textContent = padZero(currentSeconds);
+            document.getElementById("ampm").textContent = ampm;
+
+            // 2. UPDATE CURRENT DATE
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                           'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            const dayName = days[now.getDay()];
+            const monthName = months[now.getMonth()];
+            const date = now.getDate();
+            const year = now.getFullYear();
+            
+            const formattedDate = `${monthName} ${date}, ${year}`;
+            
+            document.getElementById("date-display").textContent = formattedDate;
+            document.getElementById("day-name").textContent = dayName;
+
+            // 3. UPDATE COUNTDOWN TIMER
+            const currentYear = now.getFullYear();
+            const nextNewYear = new Date(currentYear + 1, 0, 1, 0, 0, 0);
+            const timeDiff = nextNewYear - now;
+
+            const countdownWrapper = document.getElementById("countdown-wrapper");
+            const celebrationMsg = document.getElementById("celebration");
+
+            if (timeDiff <= 0) {
+                countdownWrapper.style.display = "none";
+                celebrationMsg.style.display = "block";
+            } else {
+                const daysLeft = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                const hoursLeft = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutesLeft = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const secondsLeft = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+                document.getElementById("cd-d").textContent = padZero(daysLeft);
+                document.getElementById("cd-h").textContent = padZero(hoursLeft);
+                document.getElementById("cd-m").textContent = padZero(minutesLeft);
+                document.getElementById("cd-s").textContent = padZero(secondsLeft);
+            }
+        }
+
+        updateTimers();
+        setInterval(updateTimers, 1000);
+    </script>
+</body>
+</html>
