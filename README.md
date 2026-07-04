@@ -35,7 +35,7 @@ This project displays:
 
 ## Author
 
-**Vishal Rathour**
+**Aditya Rathour**
 
 ---
 
